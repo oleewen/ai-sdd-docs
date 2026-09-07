@@ -154,7 +154,8 @@ pull_one() {
     [[ "$t_ktype" == "system" ]] || { printf '目标 KNOWLEDGE_TYPE 不匹配（应为 system）: %s\n' "$t_ktype" >&2; return 1; }
   fi
 
-  source_dir="${t_doc_root%/}/${t_doc_dir}"
+  # DOC_ROOT 即文档根（REPO_ROOT+DOC_DIR=DOC_ROOT）；禁止再拼 DOC_DIR，否则 docs/docs
+  source_dir="${t_doc_root%/}"
   [[ -d "$source_dir" ]] || { printf '源目录不存在: %s\n' "$source_dir" >&2; return 1; }
 
   slot_dir="${DOC_ROOT%/}/${slot_prefix}-${name}"

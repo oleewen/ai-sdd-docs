@@ -28,16 +28,17 @@ git -C "$SYS" remote add origin "https://example.com/org/sys-foo.git"
 cat >"$COMPANY/.docsconfig" <<EOF
 DOC_ROOT=docs
 REPO_ROOT=$COMPANY
-DOC_DIR=company
+DOC_DIR=docs
 KNOWLEDGE_TYPE=company
 AGENT_ROOT=$ROOT_DIR/agent
 AGENT_DIRS=.cursor
 EOF
 
+# 目标系统仓：正文在 DOC_ROOT（常见 DOC_DIR=docs），禁止再拼成 docs/docs
 cat >"$SYS/.docsconfig" <<EOF
 DOC_ROOT=docs
 REPO_ROOT=$SYS
-DOC_DIR=system
+DOC_DIR=docs
 KNOWLEDGE_TYPE=system
 AGENT_ROOT=$ROOT_DIR/agent
 AGENT_DIRS=.cursor
@@ -48,8 +49,7 @@ echo "# CHANGE LOG - SYSNAME" >"$COMPANY/docs/system-sys-foo/changelogs/CHANGE-L
 echo "# slot wrapper" >"$COMPANY/docs/system-sys-foo/README.md"
 echo "# slot index" >"$COMPANY/docs/system-sys-foo/index.md"
 
-mkdir -p "$SYS/docs/system"
-echo "content" >"$SYS/docs/system/sync-me.md"
+echo "content" >"$SYS/docs/sync-me.md"
 
 cat >"$COMPANY/docs/knowledge-links.yaml" <<EOF
 links:

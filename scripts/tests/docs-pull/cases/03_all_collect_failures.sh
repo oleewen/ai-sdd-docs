@@ -31,7 +31,7 @@ git -C "$APP_BAD" remote add origin "https://example.com/org/app-bad.git"
 cat >"$SYSTEM/.docsconfig" <<EOF
 DOC_ROOT=docs
 REPO_ROOT=$SYSTEM
-DOC_DIR=system
+DOC_DIR=docs
 KNOWLEDGE_TYPE=system
 AGENT_ROOT=$ROOT_DIR/agent
 AGENT_DIRS=.cursor
@@ -40,7 +40,7 @@ EOF
 cat >"$APP_OK/.docsconfig" <<EOF
 DOC_ROOT=docs
 REPO_ROOT=$APP_OK
-DOC_DIR=application
+DOC_DIR=docs
 KNOWLEDGE_TYPE=application
 AGENT_ROOT=$ROOT_DIR/agent
 AGENT_DIRS=.cursor
@@ -48,8 +48,7 @@ EOF
 
 mkdir -p "$SYSTEM/docs/application-app-ok/changelogs"
 echo "# CHANGE LOG - APPNAME" >"$SYSTEM/docs/application-app-ok/changelogs/CHANGE-LOG.md"
-mkdir -p "$APP_OK/docs/application"
-echo "content" >"$APP_OK/docs/application/sync-me.md"
+echo "content" >"$APP_OK/docs/sync-me.md"
 git -C "$APP_OK" add . && git -C "$APP_OK" commit -m "ok" -q
 
 cat >"$SYSTEM/docs/knowledge-links.yaml" <<EOF
@@ -76,4 +75,3 @@ printf '%s\n' "$out" | grep -Fq 'FAILED:' || fail "应输出失败清单"
 assert_file_exists "$SYSTEM/docs/application-app-ok/sync-me.md"
 
 pass "--all 汇总失败并整体失败"
-

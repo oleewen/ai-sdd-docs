@@ -25,19 +25,21 @@ git -C "$SYSTEM" init -q
 git -C "$APP" init -q
 git -C "$APP" remote add origin "https://example.com/org/app-foo.git"
 
+# 联邦侧：槽位与 knowledge-links 落在 DOC_ROOT 下
 cat >"$SYSTEM/.docsconfig" <<EOF
 DOC_ROOT=docs
 REPO_ROOT=$SYSTEM
-DOC_DIR=system
+DOC_DIR=docs
 KNOWLEDGE_TYPE=system
 AGENT_ROOT=$ROOT_DIR/agent
 AGENT_DIRS=.cursor
 EOF
 
+# 目标应用仓：DOC_ROOT 即正文根（REPO_ROOT+DOC_DIR=DOC_ROOT）
 cat >"$APP/.docsconfig" <<EOF
 DOC_ROOT=docs
 REPO_ROOT=$APP
-DOC_DIR=application
+DOC_DIR=docs
 KNOWLEDGE_TYPE=application
 AGENT_ROOT=$ROOT_DIR/agent
 AGENT_DIRS=.cursor
@@ -48,8 +50,7 @@ echo "# CHANGE LOG - APPNAME" >"$SYSTEM/docs/application-app-foo/changelogs/CHAN
 echo "# slot wrapper" >"$SYSTEM/docs/application-app-foo/README.md"
 echo "# slot index" >"$SYSTEM/docs/application-app-foo/index.md"
 
-mkdir -p "$APP/docs/application"
-echo "content" >"$APP/docs/application/sync-me.md"
+echo "content" >"$APP/docs/sync-me.md"
 
 cat >"$SYSTEM/docs/knowledge-links.yaml" <<EOF
 links:
