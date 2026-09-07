@@ -16,7 +16,7 @@ description: >
 - 每个 phase 结果后做轻量校核；当前单元未收敛前不得自动推进下一 overview。
 - `--file` / `--phase` / `--keywords` / `--scan-dir` / `--top-n` / 是否续 phase 等语义项须先确认。
 - `phase 3` / `excerpt` 不需 `keywords`；`phase 2` 无附录时不得静默继续，须提示先 `1-scan` + `1-write`。自动化禁用 `--phase 1`（见 gotchas）。
-- **knowledge 引用边界**：写入 overview 须遵守 [knowledge-governance.md](../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」。摘录可读外源；落盘不链 knowledge 外文档、不链下层、禁手写跨 `DOC_DIR` 爬层。违规能修则修，不明则停。
+- **knowledge 引用边界**：写入 overview 须遵守 [knowledge-governance.md](../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」。摘录可读外源；落盘不链 knowledge 外文档、不链下层、禁手写爬层。有 parent 则上层实体用生成函数 HTTP，否则纯 ID。违规能修则修，不明则停。
 
 ## 边界
 

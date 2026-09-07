@@ -64,7 +64,7 @@ system MS 挂 APP：`APP-{NAME}/MS-{NAME}/MS-{NAME}.md`（`parent_id`）。appli
 | MS-EXAMPLE | `APP-EXAMPLE` | `MS-EXAMPLE` | system 挂 APP；application 平铺；system SSOT |
 | API-EXAMPLE-001 | （system 不登记） | `MS-EXAMPLE` | API 仅 application SSOT |
 
-**链接约定**：同 bundle 用 `/knowledge/...`；跨层（如 system→application API/TBL/MW/CMP）用仓库相对路径，勿写他层不存在的 bundle-absolute `/knowledge/...`。
+**链接约定**：同 bundle 用 `/knowledge/...`。指向上层 SSOT 守 [knowledge-governance](../../../agent/knowledge/knowledge-governance.md)（HTTP 或纯 ID）。禁止链下层 application 的 API/TBL/MW/CMP 或联邦槽位。
 
 ---
 

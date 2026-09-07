@@ -82,4 +82,4 @@
 
 ## 8. knowledge 目标
 
-target 在 `application|system|company` 下 `*/knowledge/**` 时：正文/链接/路径字面量守 [knowledge-governance.md](../../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」。库外文档链 → 留字去链或实体 ID；不明则停。
+target 在 `application|system|company` 下 `*/knowledge/**` 时：正文/链接/路径字面量守 [knowledge-governance.md](../../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」。库外文档链 → 留字去链；无 parent 的跨层 → 纯 ID；不明则停。

@@ -15,7 +15,7 @@ description: >
 - 写前澄清 / 推进环 `C/M/G/S/F` / 烤干 → [intent-clarify.md](../../references/intent-clarify.md)、[unit-cycle-protocol.md](../../references/unit-cycle-protocol.md)、[grilling-skill.md](../../references/grilling-skill.md)、[docs-simplify.md](../../references/docs-simplify.md)；细节 [gates.md](references/gates.md)。未获写前 `C` 不得写 `{DOC_DIR}/knowledge/`；收敛后停等用户，不得自动推进下一批。
 - 意图澄清第 6 项须写明当前批次及本轮 `{DOC_DIR}/knowledge/` 下仓库根相对路径（含 `{ID}.md`、README、`KNOWLEDGE_INDEX.md` 等）。
 - 校验失败、路径不明或规则未覆盖时须停下澄清，不得静默继续。
-- **knowledge 引用边界**：写入 `{DOC_DIR}/knowledge/**` 须遵守 [knowledge-governance.md](../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」。可读外源；落盘不链 knowledge 外文档、不链下层/槽位、禁手写跨 `DOC_DIR` 爬层路径（跨层写实体 ID）。违规能修则修（去链、路径→ID），不明则停。
+- **knowledge 引用边界**：写入 `{DOC_DIR}/knowledge/**` 须遵守 [knowledge-governance.md](../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」。可读外源；落盘不链 knowledge 外文档、不链下层/槽位、禁手写爬层。有 `knowledge-parent.yaml` 时上层实体用约定生成函数写 HTTP SSOT 链，否则纯 ID。违规能修则修，不明则停。
 
 ## 边界
 

@@ -17,7 +17,7 @@ description: >
 - 默认排除 `INDEX-GUIDE.md` / `index.md` / 扫描生成物 / `changelogs/`；**用户点名则照改**。
 - 疑似 SSOT 重复：全仓语义相似可扫，**未确认不得**改成链接或删段。
 - 模板硬结构（SDD 固定章、编号表）：主砍散文，不拆章刷短；表密文档不以行数 KPI 判失败。见 [docs-simplify.md](../../references/docs-simplify.md)「模板硬结构」。
-- **knowledge 引用边界**：改写 `application|system|company` 下 `*/knowledge/**` 时须遵守 [knowledge-governance.md](../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」。去重改引用不得链出 knowledge / 下层 / 爬层路径；跨层用实体 ID。违规能修则修，不明则停。
+- **knowledge 引用边界**：改写 `application|system|company` 下 `*/knowledge/**` 时须遵守 [knowledge-governance.md](../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」。去重改引用不得链出 knowledge 外 / 下层 / 爬层；跨层 HTTP 仅生成函数，无 parent 则纯 ID。违规能修则修，不明则停。
 
 ## 边界
 

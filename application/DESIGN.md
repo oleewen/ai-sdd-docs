@@ -58,7 +58,7 @@ title: 应用知识文档库 — 设计方案摘录
 
 ### 2.2.1 跨层实体首次定义层级
 
-联邦三层**首次定义**层级如下；他处仅 ID 引用，不重复字段语义。
+联邦三层**首次定义**层级如下；他处不重复字段语义。引用形态见 [knowledge-governance.md](../agent/knowledge/knowledge-governance.md)（有 parent 则 HTTP 到本表所列层的 SSOT 文件，否则纯 ID）。
 
 | 视角 | 实体 | 首次定义层级 |
 | --- | --- | --- |

@@ -45,7 +45,7 @@ title: 公司知识库设计
 
 ### 公司级实体（正文 SSOT ∈ `knowledge/**`）
 
-系统/应用只引用 ID；overview 非实体 SSOT。字段表：[application/DESIGN.md](../application/DESIGN.md) §2.2.1。命名：[naming-conventions](../agent/knowledge/naming-conventions.md)。
+系统/应用按 [knowledge-governance](../agent/knowledge/knowledge-governance.md) 引用公司层 SSOT（有 parent 则 HTTP，否则纯 ID）；overview 非实体 SSOT。字段表：[application/DESIGN.md](../application/DESIGN.md) §2.2.1。命名：[naming-conventions](../agent/knowledge/naming-conventions.md)。
 
 | 视角 | 实体 | 公司层聚焦 |
 | --- | --- | --- |

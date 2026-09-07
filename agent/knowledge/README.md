@@ -11,7 +11,7 @@
 
 | 文件 | 说明 |
 | --- | --- |
-| [knowledge-governance.md](knowledge-governance.md) | 三层职责边界与使命 |
+| [knowledge-governance.md](knowledge-governance.md) | 三层职责边界与业务 knowledge 引用边界 |
 | [okf-spec.md](okf-spec.md) | company / system / application 共享知识规范 SSOT |
 | [naming-conventions.md](naming-conventions.md) | 实体 ID 命名规范（全局 SSOT） |
 | [glossary.md](glossary.md) | 全局术语表 |

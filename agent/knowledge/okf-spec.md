@@ -246,12 +246,12 @@ MUST：
 - frontmatter 满足实体概念 Profile 的 10 字段必填（见 §2），并保持 `type`/`hierarchy`/`perspective`/`layer_scope` 一致。
 - 正文包含 4 个中文 H2（见本节），用于承载关系、跨视角、说明与证据。
 - 关系与跨视角引用使用可解析链接；同一文件内链接风格保持一致。
-- 业务三层 `*/knowledge/**` 的跨文件引用方向与形态遵守 [knowledge-governance.md](knowledge-governance.md)「业务 knowledge 引用边界」（同层或上层；跨 `DOC_DIR` 正文写实体 ID，禁手写爬层路径；依据段不链库外文档路径）。
+- 业务三层 `*/knowledge/**` 的跨文件引用方向与形态遵守 [knowledge-governance.md](knowledge-governance.md)「业务 knowledge 引用边界」（同层 bundle-relative；向上有 parent 则 HTTP 到首次定义层 SSOT，无 parent 则纯 ID；禁下层/槽位/爬层；依据段不链库外文档路径）。
 
 SHOULD：
 
 - `description` 保持“一句话可复述”的短句；更长说明放 `## 详细说明`。
-- 知识内证据优先用「同层/上层 knowledge 路径或实体 ID + 锚点」；库外证据用 URI/资产名（见治理边界），变更时同步。
+- 知识内证据优先用同层 bundle-relative 链，或上层首次定义层 HTTP（有 `knowledge-parent.yaml`）/ 纯 ID（无 parent）；库外证据用 URI/资产名（见治理边界），变更时同步。
 - 扩展字段（OKF extensions）仅用于“确需机器消费且跨文件共享”的字段；否则下沉到正文以降低耦合。
 
 MAY：
@@ -271,7 +271,7 @@ MAY：
 | 1 | `## 关系` | 父子、聚合、能力、应用实现等结构关系 |
 | 2 | `## 跨视角` | 跨 perspective 引用 |
 | 3 | `## 详细说明` | 业务定义、职责、不变量、验收标准等 |
-| 4 | `## 依据与证据` | 同层/上层 knowledge 锚点、实体 ID；或外部 URI/资产名（见 [knowledge-governance.md](knowledge-governance.md)） |
+| 4 | `## 依据与证据` | 同层链、上层 SSOT HTTP 或纯 ID；或外部 URI/资产名（见 [knowledge-governance.md](knowledge-governance.md)） |
 
 ### 4.1 关系段
 
@@ -299,8 +299,8 @@ MAY：
 指针格式：
 
 - 同目录：`[X-XXX](X-XXX.md)` 或 `[X-XXX](X-XXX/X-XXX.md)`
-- 跨 perspective：`[X-XXX](../../<other-perspective>/X-XXX/X-XXX.md)`
-- 跨层引用可使用仓库内相对路径或 bundle-relative 规范路径，但同一文件内要保持一致。
+- 跨 perspective（同 bundle）：`[X-XXX](../../<other-perspective>/X-XXX/X-XXX.md)` 或 `/knowledge/...`
+- 跨层：遵守 [knowledge-governance.md](knowledge-governance.md)（生成函数 HTTP 或纯 ID）；禁止手写跨 `DOC_DIR` 相对路径。
 
 ### 4.2 跨视角段
 

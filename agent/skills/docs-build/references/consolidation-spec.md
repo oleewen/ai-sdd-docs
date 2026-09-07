@@ -49,7 +49,7 @@ graph TD
 
 ## concept 文件形状
 
-每个实体 concept 为独立 `{ID}.md`，frontmatter 至少含 `full_id`、`perspective`、`hierarchy`、`type`、`title`；跨视角引用写在 `# Cross-perspective` 与 bundle-relative 链接。跨 `DOC_DIR` 写实体 ID（见 [knowledge-governance.md](../../../knowledge/knowledge-governance.md) 引用边界）。路径规则见 [naming-conventions.md](../../../knowledge/naming-conventions.md) §OKF concept 路径与 type 映射。
+每个实体 concept 为独立 `{ID}.md`，frontmatter 至少含 `full_id`、`perspective`、`hierarchy`、`type`、`title`；跨视角引用写在 `# Cross-perspective` 与 bundle-relative 链接。跨 `DOC_DIR` 守 [knowledge-governance.md](../../../knowledge/knowledge-governance.md) 引用边界（有 parent 则 HTTP SSOT，否则纯 ID）。路径规则见 [naming-conventions.md](../../../knowledge/naming-conventions.md) §OKF concept 路径与 type 映射。
 
 | 视角 | 落盘 |
 |------|------|

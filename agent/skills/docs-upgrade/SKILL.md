@@ -14,7 +14,7 @@ description: >
 - 当前单元：单个主文件，或单个已确认关联批次。
 - 写前澄清 / 推进环 `C/M/G/S/F` / 烤干 → [intent-clarify.md](../../references/intent-clarify.md)、[unit-cycle-protocol.md](../../references/unit-cycle-protocol.md)、[grilling-skill.md](../../references/grilling-skill.md)、[docs-simplify.md](../../references/docs-simplify.md)；细节 [gates.md](references/gates.md)。未获写前 `C` 不得写入或扩展关联；写入后须烤干，收敛后停等用户。
 - 用户明示「只改本文件 / 不要关联 / 不要全库搜」时，不得静默重开链式扩展。
-- **knowledge 引用边界**：改写 `application|system|company` 下 `*/knowledge/**` 时须遵守 [knowledge-governance.md](../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」。替换/同步不得引入 knowledge 外文档链、下层链或手写跨 `DOC_DIR` 爬层路径；跨层用实体 ID。违规能修则修，不明则停。
+- **knowledge 引用边界**：改写 `application|system|company` 下 `*/knowledge/**` 时须遵守 [knowledge-governance.md](../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」。替换/同步不得引入 knowledge 外文档链、下层链或手写爬层；跨层 HTTP 仅生成函数，无 parent 则纯 ID。违规能修则修，不明则停。
 
 ## 边界
 

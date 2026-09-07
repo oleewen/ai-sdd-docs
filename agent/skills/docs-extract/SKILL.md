@@ -16,7 +16,7 @@ description: >
 - 写前澄清 / 推进环 `C/M/G/S/F` / 烤干 → [intent-clarify.md](../../references/intent-clarify.md)、[unit-cycle-protocol.md](../../references/unit-cycle-protocol.md)、[grilling-skill.md](../../references/grilling-skill.md)、[docs-simplify.md](../../references/docs-simplify.md)；细节 [gates.md](references/gates.md)。未获写前 `C` 不得写入或输出正式预览结论；执行或预览后均须烤干，收敛后停等用户。
 - `--dry-run`：三分区预览，不写第三列；无命中即结束单元。
 - **第三列**：去重后仅写 delta；[federation-spec.md](../docs-distill/references/federation-spec.md)。
-- **knowledge 引用边界**：写入 `*/knowledge/overview/**` 须遵守 [knowledge-governance.md](../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」。可读 `--sources` 外源；落盘第三列不链源文件路径、不链下层 knowledge、禁手写跨 `DOC_DIR` 爬层（跨层写实体 ID）。违规能修则修，不明则停。
+- **knowledge 引用边界**：写入 `*/knowledge/overview/**` 须遵守 [knowledge-governance.md](../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」。可读 `--sources` 外源；落盘第三列不链源文件路径、不链下层/槽位、禁手写爬层。有 parent 则上层实体用生成函数 HTTP，否则纯 ID。违规能修则修，不明则停。
 
 ## 边界
 

@@ -17,7 +17,7 @@ description: >
 - `--dry-run` 只预览，不写盘。
 - `validate` 出现 **ERROR** 时不得静默继续后续步骤；必须汇报错误并停下。
 - 轻量运维技能：参数向导 → refresh / validate / viz → 结果摘要或失败分流；**不**引入当前单元循环或 `grilling` 协议。结果摘要出口须做受众 **A/B**（见 [audience-and-language.md](../../references/audience-and-language.md)、[light-flow-actions.md](../../references/light-flow-actions.md)）。
-- **knowledge 引用边界**：刷新/改写 `*/knowledge/**` 索引或产物时须遵守 [knowledge-governance.md](../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」；不得引入跨层爬层路径或 knowledge 外文档链。
+- **knowledge 引用边界**：刷新/改写 `*/knowledge/**` 索引或产物时须遵守 [knowledge-governance.md](../../knowledge/knowledge-governance.md)「业务 knowledge 引用边界」；不得引入爬层路径、下层链或 knowledge 外文档链。跨层 HTTP 仅能由约定生成函数写出。
 
 ## 边界
 

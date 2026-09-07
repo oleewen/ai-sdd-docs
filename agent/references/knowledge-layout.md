@@ -51,9 +51,11 @@
 
 ```text
 应用库（本地 path，HEAD） ──docs-link──► system/knowledge-links.yaml（建联 + 建槽位）
-应用库（本地 path，HEAD） ──docs-pull──► system/application-{APPNAME}/（联邦槽位）
+                              └──► 应用库 knowledge-parent.yaml（1:1 上级 identity）
+应用库（本地 path，HEAD） ──docs-pull──► system/application-{APPNAME}/（联邦槽位，不可被 knowledge 引用）
 系统库（本地 path，HEAD） ──docs-link──► company/knowledge-links.yaml（建联 + 建槽位）
-系统库（本地 path，HEAD） ──docs-pull──► company/system-{SYSNAME}/（联邦槽位）
+                              └──► 系统库 knowledge-parent.yaml
+系统库（本地 path，HEAD） ──docs-pull──► company/system-{SYSNAME}/（联邦槽位，不可被 knowledge 引用）
          │
          ▼ docs-distill（仅系统 overview）
 system/knowledge/overview/{APPNAME}-overview.md

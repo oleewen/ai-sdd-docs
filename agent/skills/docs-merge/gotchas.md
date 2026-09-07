@@ -18,6 +18,6 @@
 
 - 无写前六项 + 写前 C → 不写、不输出正式计划结论（dry-run 亦同）
 - **未出变更清单即提问或落盘** / 未以提问逐项确认 / 未答完当前项即进下一项 → 禁止（见 merge-spec §5–§7）
-- knowledge 库外链、爬层路径 → 落盘前处理；不明则停
+- knowledge 库外链、爬层路径、无 parent 的跨层 HTTP → 落盘前按引用边界处理；不明则停
 
 终检清单：[references/quality-checklist.md](references/quality-checklist.md)。
