@@ -10,11 +10,79 @@
 # 登记值：repository 存 Git remote URL（有 remote 时）；path 存本机路径（在 $HOME 下为 ~/ 前缀的
 #       路径，家目录本身写 ~/；否则为规范化绝对路径）。兼容旧数据：无 ~ 的 $HOME 相对片段仍可读。
 #       path 不得为 URL 形态（须写在 repository）。不兼容旧版仅 path=URL 的 YAML。
+# link 同时在目标 {DOC_ROOT}/knowledge-parent.yaml 写入源仓 identity（1:1）；unlink 将跨层 HTTP 改为纯 ID。
 set -euo pipefail
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=./link-config.sh
 source "${SCRIPT_DIR}/link-config.sh"
+
+docs_link_okf_parent_py() {
+  local c
+  for c in \
+    "${SCRIPT_DIR}/../agent/skills/docs-okf/scripts/okf_parent.py" \
+    "${_sar:-}/skills/docs-okf/scripts/okf_parent.py"
+  do
+    [[ -n "$c" && -f "$c" ]] && { printf '%s\n' "$c"; return 0; }
+  done
+  sdx_error "未找到 okf_parent.py（跨层 parent 写入）"
+}
+
+docs_link_run_okf_parent() {
+  local py
+  py="$(docs_link_okf_parent_py)"
+  if [[ "$DRY" == '1' ]]; then
+    python3 "$py" --dry-run "$@"
+  else
+    python3 "$py" "$@"
+  fi
+}
+
+docs_link_abs_under_repo() {
+  local repo="${1:?}" doc="${2:?}"
+  local repo_abs doc_abs
+  repo_abs="$(strip_trailing_slash "$(abs_path "$repo")")"
+  if [[ "$doc" == /* ]]; then
+    doc_abs="$(strip_trailing_slash "$(abs_path "$doc")")"
+    case "$doc_abs" in
+      "$repo_abs"|"$repo_abs"/*) printf '%s\n' "$doc_abs" ;;
+      *)
+        printf '%s\n' "$repo_abs/$(basename "$doc_abs")"
+        ;;
+    esac
+  else
+    strip_trailing_slash "$(abs_path "$repo_abs/$doc")"
+  fi
+}
+
+docs_link_write_child_parent() {
+  local src_repo src_path src_dd tdoc_abs sdoc_abs
+  src_repo="$(knowledge_link_git_remote_url_prefer_origin "$SRC_ROOT" || true)"
+  src_path="$(knowledge_link_stored_path_from_absolute "$SRC_ROOT")"
+  sdoc_abs="$(docs_link_abs_under_repo "$SRC_ROOT" "$_sdoc")"
+  src_dd="$(docsconfig_doc_dir_from_roots "$SRC_ROOT" "$sdoc_abs")" \
+    || sdx_error "无法计算源 DOC_DIR（DOC_ROOT 须位于 REPO_ROOT 下）"
+  tdoc_abs="$(docs_link_abs_under_repo "$TGT_ROOT" "$_tdoc")"
+  docs_link_run_okf_parent write \
+    --doc-root "$tdoc_abs" \
+    --knowledge-type "$_skt" \
+    --repository "${src_repo}" \
+    --path "$src_path" \
+    --doc-dir "$src_dd" \
+    --ref main
+}
+
+docs_link_unlink_child_parent() {
+  local tgt_cfg tdoc trepo tdd tar tads tkt tdoc_abs
+  [[ -d "${TARGET_KEY:-}" ]] || return 0
+  tgt_cfg="$TARGET_KEY/.docsconfig"
+  [[ -f "$tgt_cfg" ]] || return 0
+  tdoc=''; trepo=''; tdd=''; tar=''; tads=''; tkt=''
+  docsconfig_read_into "$tgt_cfg" tdoc trepo tdd tar tads tkt || return 0
+  [[ -n "$tdoc" ]] || return 0
+  tdoc_abs="$(docs_link_abs_under_repo "$TARGET_KEY" "$tdoc")"
+  docs_link_run_okf_parent unlink --doc-root "$tdoc_abs"
+}
 
 # =============================================================================
 # knowledge-links.yaml
@@ -390,6 +458,9 @@ docs_link_usage() {
   同一 target 重复 link：不新增行，只更新已存在且 identity 相同的那条记录。
   unlink 时：注销该条目的同时将 application-<APPNAME>/ 备份到工程根 .docs-init/ 再移除（若目录存在）。
 
+  link 同时在目标 {DOC_ROOT}/knowledge-parent.yaml 写入源仓 identity（1:1 parent）。
+  变更 repository/ref/doc_dir 时改写目标 knowledge/** 中旧 HTTP 前缀；unlink 改为纯 ID 后删除该文件。
+
 示例:
   ./scripts/docs-link.sh --target ~/workspaces/target-repo --link
   ./scripts/docs-link.sh --target ~/workspaces/target-repo --link --app-name=my-app
@@ -583,6 +654,7 @@ docs_link_execute_link() {
   fi
 
   knowledge_links_write_quads "$LIST_FILE" repos paths doc_dirs app_names app_labels
+  docs_link_write_child_parent
 
   [[ "$link_is_update" -eq 1 ]] && link_verb='已更新登记'
   if [[ "$TARGET_DOC_DIR" == 'system' && -n "$TARGET_SYS_NAME" ]]; then
@@ -606,6 +678,7 @@ docs_link_execute_unlink() {
   declare -a newr=() newp=() newd=() newa=() newl=()
 
   [[ "$have" -eq 0 ]] && { printf '提示: 未找到登记项，跳过: %s\n' "$REGISTER_KEY" >&2; exit 0; }
+  docs_link_unlink_child_parent
   if [[ "$matched_idx" -ge 0 && "$_skt" == 'system' ]]; then
     unlink_app_name="${app_names[matched_idx]:-}"
     if [[ -z "$unlink_app_name" ]]; then

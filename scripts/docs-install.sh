@@ -323,6 +323,24 @@ install_docs_link_scripts_to_target_repo() {
 }
 
 # 步骤 1 分发：按 type × mode 将知识库模板安装至目标文档目录
+# 重装时保留已有 knowledge-parent.yaml（与 docs-link 1:1 parent 契约）
+_DOCS_INSTALL_PARENT_STASH=""
+
+docs_install_stash_knowledge_parent() {
+  local src="${CFG[docs_abs]}/knowledge-parent.yaml"
+  _DOCS_INSTALL_PARENT_STASH=""
+  [[ -n "${CFG[docs_abs]}" && -f "$src" ]] || return 0
+  _DOCS_INSTALL_PARENT_STASH="$(mktemp "${TMPDIR:-/tmp}/knowledge-parent.XXXXXX")"
+  cp "$src" "$_DOCS_INSTALL_PARENT_STASH"
+}
+
+docs_install_restore_knowledge_parent() {
+  [[ -n "${_DOCS_INSTALL_PARENT_STASH:-}" && -f "$_DOCS_INSTALL_PARENT_STASH" ]] || return 0
+  mkdir -p "${CFG[docs_abs]}"
+  mv "$_DOCS_INSTALL_PARENT_STASH" "${CFG[docs_abs]}/knowledge-parent.yaml"
+  _DOCS_INSTALL_PARENT_STASH=""
+}
+
 docs_install_copy_templates() {
   case "${CFG[type]}" in
     application)
@@ -707,12 +725,14 @@ docs_install_run() {
   sdx_have_perl || sdx_warn "未检测到 perl：文件内容替换将被跳过，建议安装 perl。"
 
   # ── 步骤 1：知识库同步 ────────────────────────────────────────────────────
+  docs_install_stash_knowledge_parent
   if should_reset_docs_dir_before_sync; then
     reset_docs_dir_with_backup
   fi
 
   if [[ -n "${CFG[docs_abs]}" && "${CFG[scope]}" == 'knowledge' ]]; then
     docs_install_copy_templates
+    docs_install_restore_knowledge_parent
     install_docs_link_scripts_to_target_repo
     docs_install_write_docsconfig
     docs_install_rewrite_agent_paths

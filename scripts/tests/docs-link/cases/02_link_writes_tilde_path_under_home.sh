@@ -26,6 +26,7 @@ trap cleanup EXIT
 mkdir -p "$COMPANY/docs" "$SYSTEM/docs"
 git -C "$COMPANY" init -q
 git -C "$SYSTEM" init -q
+git -C "$COMPANY" remote add origin "https://github.com/example/company-ea.git"
 git -C "$SYSTEM" remote add origin "https://example.com/org/sys-foo.git"
 
 cp -R "$ROOT_DIR/company/system-SYSNAME" "$COMPANY/docs/system-SYSNAME"
@@ -64,4 +65,13 @@ grep -Fq 'sys_label: "sys-foo"' "$COMPANY/docs/knowledge-links.yaml" \
   || fail "sys_label 应写入"
 assert_dir_exists "$COMPANY/docs/system-sys-foo"
 
-pass "link 在 \$HOME 下写出 path: \"~/ws/sys-foo\" 并创建槽位"
+assert_file_exists "$SYSTEM/docs/knowledge-parent.yaml"
+grep -Fq 'knowledge_type: company' "$SYSTEM/docs/knowledge-parent.yaml" \
+  || fail "parent.knowledge_type 应为 company"
+grep -Fq 'repository: "https://github.com/example/company-ea.git"' \
+  "$SYSTEM/docs/knowledge-parent.yaml" \
+  || fail "parent.repository 应为源仓 origin"
+grep -Fq 'doc_dir: "docs"' "$SYSTEM/docs/knowledge-parent.yaml" \
+  || fail "parent.doc_dir 应为源 DOC_ROOT 相对仓库根"
+
+pass "link 在 \$HOME 下写出 path: \"~/ws/sys-foo\" 并创建槽位与 knowledge-parent.yaml"
