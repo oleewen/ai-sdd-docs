@@ -71,8 +71,8 @@ def test_validator_rejects_missing_section() -> None:
         assert code == 1
 
 
-def test_validator_cross_bundle_knowledge_link_fallback() -> None:
-    """system 绝对 /knowledge/… 本层缺失时，回退查 application。"""
+def test_validator_no_downstream_bundle_fallback() -> None:
+    """system 不得把 /knowledge/… 回退到 application（禁止引下层）。"""
     with tempfile.TemporaryDirectory() as tmp:
         repo = Path(tmp)
         api = (
@@ -122,7 +122,29 @@ def test_validator_cross_bundle_knowledge_link_fallback() -> None:
         )
         code = validator.run()
         assert code == 0
-        assert validator.warnings == 0
+        assert validator.warnings >= 1
+
+
+def test_validator_http_without_parent_errors() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp) / "system"
+        (root / "knowledge" / "business").mkdir(parents=True)
+        (root / "index.md").write_text(
+            '---\nokf_version: "0.1"\n---\n', encoding="utf-8"
+        )
+        (root / "knowledge" / "business" / "BD-EXAMPLE.md").write_text(
+            FRONTMATTER.replace("layer_scope: application", "layer_scope: system")
+            + "## 关系\n\n- (none)\n\n"
+            "## 跨视角\n\n- (none)\n\n"
+            "## 详细说明\n\n"
+            "- 上游：[BD-EXAMPLE](https://github.com/org/ea/blob/main/company/"
+            "knowledge/business/BD-EXAMPLE/BD-EXAMPLE.md)\n\n"
+            "## 依据与证据\n\n示例\n",
+            encoding="utf-8",
+        )
+        validator = validate_bundle.Validator(root, "system")
+        code = validator.run()
+        assert code == 1
 
 
 def test_validator_cross_bundle_missing_still_warns() -> None:
@@ -168,8 +190,9 @@ def main() -> None:
         test_validator_accepts_legacy_english_h1_sections,
         test_validator_accepts_target_chinese_h2_sections,
         test_validator_rejects_missing_section,
-        test_validator_cross_bundle_knowledge_link_fallback,
+        test_validator_no_downstream_bundle_fallback,
         test_validator_cross_bundle_missing_still_warns,
+        test_validator_http_without_parent_errors,
     ]
     for fn in tests:
         fn()

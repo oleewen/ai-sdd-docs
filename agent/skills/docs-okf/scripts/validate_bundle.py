@@ -16,6 +16,7 @@ from typing import Dict, List, Optional, Set
 SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPT_DIR))
 import okf_lib  # noqa: E402
+import okf_cross_layer  # noqa: E402
 
 BUNDLE_LINK_RE = re.compile(r"\]\((/(?:knowledge|application)/[^)]+)\)")
 INDEX_LINK_RE = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
@@ -26,12 +27,6 @@ SECTION_HEADING_RE = re.compile(r"^(#{1,2})\s+(\S.*?)\s*$", re.MULTILINE)
 
 # Cross-perspective 段内链接提取（与 BUNDLE_LINK_RE 不同：相对路径也校验）
 SECTION_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
-
-# 本 bundle 无目标时，绝对 `/knowledge/...` 可回退查下游 bundle（跨层首次定义）
-CROSS_BUNDLE_LINK_FALLBACK: Dict[str, tuple[str, ...]] = {
-    "system": ("application",),
-    "company": ("system", "application"),
-}
 
 
 class Validator:
@@ -110,6 +105,13 @@ class Validator:
             if path.name == "index.md":
                 self._check_index_links(path, text)
             self._check_layer_scope(path, relpath, meta)
+
+        for path in self._md_files:
+            relpath = self.relpath(path)
+            if not relpath.startswith("knowledge/"):
+                continue
+            text = path.read_text(encoding="utf-8")
+            self._check_cross_layer_http(path, text)
 
         print("")
         print("=== OKF v1 校验结果 ===")
@@ -280,17 +282,20 @@ class Validator:
         return target.exists()
 
     def _absolute_bundle_link_exists(self, link: str) -> bool:
-        """本 bundle 命中，或按跨层回退表查下游 bundle。"""
-        if self._target_exists(self._resolve_bundle_target(link)):
-            return True
-        if not link.startswith("/knowledge/"):
-            return False
-        normalized = link.lstrip("/")
-        for other in CROSS_BUNDLE_LINK_FALLBACK.get(self.bundle_name, ()):
-            cand = self.repo_root / other / normalized
-            if cand.exists():
-                return True
-        return False
+        """仅本 bundle；禁止向下游 bundle 回退。"""
+        return self._target_exists(self._resolve_bundle_target(link))
+
+    def _check_cross_layer_http(self, path: Path, text: str) -> None:
+        relpath = self.relpath(path)
+        if not relpath.startswith("knowledge/"):
+            return
+        for match in INDEX_LINK_RE.finditer(text):
+            href = match.group(1).strip()
+            if not (href.startswith("http://") or href.startswith("https://")):
+                continue
+            err = okf_cross_layer.validate_http_href(self.bundle_root, href)
+            if err:
+                self.error(f"{relpath}: {err}: {href}")
 
     def _check_bundle_links(self, path: Path, text: str) -> None:
         relpath = self.relpath(path)
@@ -306,6 +311,14 @@ class Validator:
             if link.startswith("#"):
                 continue
             if link.startswith(("http://", "https://", "mailto:")):
+                if relpath.startswith("knowledge/") and link.startswith(
+                    ("http://", "https://")
+                ):
+                    err = okf_cross_layer.validate_http_href(
+                        self.bundle_root, link
+                    )
+                    if err:
+                        self.error(f"{relpath}: {err}: {link}")
                 continue
             if link.startswith("/"):
                 if not self._absolute_bundle_link_exists(link):

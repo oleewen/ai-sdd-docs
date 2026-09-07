@@ -106,6 +106,18 @@ def test_entity_relpath_company_bd_in_domain_folder():
     assert path == "knowledge/business/BD-EXAMPLE/BD-EXAMPLE.md"
 
 
+def test_entity_relpath_company_bd_uses_full_id():
+    path = okf_lib.entity_relpath("business", "BD-CHARGING", bundle="company")
+    assert path == "knowledge/business/BD-CHARGING/BD-CHARGING.md"
+
+
+def test_entity_relpath_company_cap_with_parent():
+    path = okf_lib.entity_relpath(
+        "business", "CAP-ORDER", parent_id="BD-CHARGING", bundle="company"
+    )
+    assert path == "knowledge/business/BD-CHARGING/CAP-ORDER.md"
+
+
 def test_entity_relpath_company_cap():
     path = okf_lib.entity_relpath("business", "CAP-EXAMPLE", bundle="company")
     assert path == "knowledge/business/BD-EXAMPLE/CAP-EXAMPLE.md"
@@ -164,7 +176,9 @@ def main() -> None:
         test_is_concept_file,
         test_hierarchy_to_type_cap,
         test_entity_relpath_company_bd_in_domain_folder,
+        test_entity_relpath_company_bd_uses_full_id,
         test_entity_relpath_company_cap,
+        test_entity_relpath_company_cap_with_parent,
         test_entity_relpath_company_tpl,
         test_entity_relpath_system_ms_and_mw,
         test_entity_relpath_system_ms_requires_parent,

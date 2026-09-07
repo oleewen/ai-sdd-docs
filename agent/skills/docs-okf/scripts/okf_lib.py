@@ -217,6 +217,72 @@ def hierarchy_to_type(hierarchy: str) -> str:
     return HIERARCHY_TO_TYPE.get(hierarchy, hierarchy)
 
 
+HIERARCHY_TO_PERSPECTIVE: Dict[str, str] = {
+    "BD": "business",
+    "BSD": "business",
+    "BC": "business",
+    "AGG": "business",
+    "AB": "business",
+    "CAP": "business",
+    "PL": "product",
+    "PM": "product",
+    "FT": "product",
+    "FR": "product",
+    "UC": "product",
+    "BP": "product",
+    "BR": "product",
+    "SYS": "application",
+    "APP": "application",
+    "MS": "application",
+    "API": "application",
+    "MDG": "data",
+    "DS": "data",
+    "ENT": "data",
+    "TBL": "data",
+    "TPL": "technical",
+    "TSD": "technical",
+    "MW": "technical",
+    "CMP": "technical",
+}
+
+# 首次定义层（SSOT：application/DESIGN.md §2.2.1）
+HIERARCHY_FIRST_LAYER: Dict[str, str] = {
+    "BD": "company",
+    "CAP": "company",
+    "PL": "company",
+    "SYS": "company",
+    "MDG": "company",
+    "TPL": "company",
+    "BSD": "system",
+    "BC": "system",
+    "AGG": "system",
+    "AB": "system",
+    "PM": "system",
+    "BP": "system",
+    "FT": "system",
+    "FR": "system",
+    "UC": "system",
+    "BR": "system",
+    "APP": "system",
+    "MS": "system",
+    "DS": "system",
+    "ENT": "system",
+    "TSD": "system",
+    "API": "application",
+    "TBL": "application",
+    "MW": "application",
+    "CMP": "application",
+}
+
+
+def hierarchy_first_layer(hierarchy: str) -> Optional[str]:
+    return HIERARCHY_FIRST_LAYER.get(hierarchy)
+
+
+def hierarchy_to_perspective(hierarchy: str) -> Optional[str]:
+    return HIERARCHY_TO_PERSPECTIVE.get(hierarchy)
+
+
 def perspective_domain_anchor(
     perspective: str,
     full_id: Optional[str] = None,
@@ -243,9 +309,10 @@ def entity_relpath(
     prefix = _id_prefix(full_id)
     if bundle == "company":
         if perspective == "business" and prefix == "BD":
-            return f"knowledge/business/BD-EXAMPLE/BD-EXAMPLE.md"
+            return f"knowledge/business/{full_id}/{full_id}.md"
         if perspective == "business" and prefix == "CAP":
-            return f"knowledge/business/BD-EXAMPLE/{full_id}.md"
+            bd = parent_id or "BD-EXAMPLE"
+            return f"knowledge/business/{bd}/{full_id}.md"
         if perspective == "product" and prefix == "PL":
             return f"knowledge/product/{full_id}.md"
         if perspective == "application" and prefix == "SYS":
