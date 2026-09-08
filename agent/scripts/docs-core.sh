@@ -323,7 +323,7 @@ docsconfig_validate_knowledge_type() {
 
 # 与 docsconfig_knowledge_type_is_valid 允许集合一致（供 *-config 枚举/文档对齐）
 readonly -a SDX_SUPPORTED_KNOWLEDGE_TYPES=(application system company)
-readonly -a SDX_SUPPORTED_AGENTS=(cursor trae claude kiro)
+readonly -a SDX_SUPPORTED_AGENTS=(cursor trae claude kiro codex)
 
 sdx_agents_normalize() {
   local agents_str="${1:-}"
@@ -549,7 +549,8 @@ sdx_resolve_docs_core_path() {
       "${home}/.cursor/scripts/docs-core.sh" \
       "${home}/.trae/scripts/docs-core.sh" \
       "${home}/.claude/scripts/docs-core.sh" \
-      "${home}/.kiro/scripts/docs-core.sh"; do
+      "${home}/.kiro/scripts/docs-core.sh" \
+      "${home}/.codex/scripts/docs-core.sh"; do
       if [[ -f "$dc" ]]; then
         abs_path "$dc"
         return 0
@@ -612,7 +613,9 @@ sdx_source_docs_core_from_layout() {
     for bootstrap_used in \
       "${HOME}/.cursor/scripts/docs-core.sh" \
       "${HOME}/.trae/scripts/docs-core.sh" \
-      "${HOME}/.claude/scripts/docs-core.sh"; do
+      "${HOME}/.claude/scripts/docs-core.sh" \
+      "${HOME}/.kiro/scripts/docs-core.sh" \
+      "${HOME}/.codex/scripts/docs-core.sh"; do
       [[ -f "$bootstrap_used" ]] && break
       bootstrap_used=''
     done

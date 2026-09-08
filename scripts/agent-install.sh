@@ -213,7 +213,7 @@ agent_install_apply_agents() {
   local ao="${CFG[agents_opt]:-}"
   [[ -n "$ao" ]] || ao="${AGENTS_OPT:-$SDX_DEFAULT_AGENTS_OPT}"
   validate_agents "$ao" \
-    || sdx_error "无效 --agents: $ao（支持 cursor、trae、claude、kiro、all 及逗号或空格分隔多选）"
+    || sdx_error "无效 --agents: ${ao}（仅支持 cursor、claude、codex、trae、kiro）"
   read -ra ENABLED_AGENTS <<< "$(normalize_agents "$ao")"
   (( ${#ENABLED_AGENTS[@]} > 0 )) || sdx_error "未解析到任何 Agent"
 }
@@ -350,7 +350,7 @@ agent_install_usage() {
 
 说明
   将本仓库 agent/ 树安装到 $HOME/.agents/（单份实体存储），并按 --agents
-  在 ${TARGET}/.{.cursor|.trae|.claude}/ 下建立软链（按条目链接，包含 $HOME/.agents/ 根文件与
+  在 ${TARGET}/.{.cursor|.trae|.claude|.kiro|.codex}/ 下建立软链（按条目链接，包含 $HOME/.agents/ 根文件与
   hooks/rules/scripts/skills/knowledge/references 等子目录下的各文件/目录）。
   scripts 阶段会从本仓库复制 agent/scripts/docs-core.sh 到 $HOME/.agents/scripts/docs-core.sh。
   不安装 README。
@@ -360,7 +360,7 @@ agent_install_usage() {
 选项
   --scope=SCOPE   a=全部 | r=rules | s=skills | h=hooks | sh=scripts | k|knowledge=knowledge+references  [默认: a]
   --target PATH   安装根父目录，其下仅为选中的 agent 创建对应目录  [默认: $HOME；仍兼容 --target=PATH]
-  --agents=LIST   cursor | trae | claude | kiro | all；逗号或空格分隔多选  [默认: cursor]
+  --agents=LIST   cursor | trae | claude | kiro | codex | all；逗号或空格分隔多选  [默认: cursor]
   --dry-run       仅打印将执行的操作
   -h, --help      显示此帮助
 

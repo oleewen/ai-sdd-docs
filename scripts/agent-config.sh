@@ -18,6 +18,7 @@ declare -A SDX_AGENT_DIR_MAP=(
   [trae]='.trae'
   [claude]='.claude'
   [kiro]='.kiro'
+  [codex]='.codex'
 )
 
 readonly SDX_DEFAULT_AGENT_SCOPE='a'

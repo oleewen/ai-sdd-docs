@@ -42,7 +42,7 @@ Slash 技能以仓库 `agent/skills/` 下各 `SKILL.md` 为准（若存在总览
 | **中央知识库挂载建联**（`central`） | `application`（默认） | `application/` **子集** | 仅 `changelogs/`、`knowledge/`、`specs/`、`index.md`、`README.md`、`docs-meta.md`、`manifest.md`；**不执行中央知识库挂载建联登记/联邦槽位写入** |
 | **中央知识库挂载建联**（`central`） | `system` / `company` | - | **不支持**（报错） |
 
-- **Agent 配置**（**`agent-install.sh`**）：在 **`--target`**（默认 **`$HOME`**）下按 **`--agents`**（默认 **`cursor`**，可 **`all`** 或多选）安装到 **`${TARGET}/.{.cursor,.trae,.claude,.kiro}/`** 中对应目录；单份实体默认存储于 **`$HOME/.agents/`**；按 **`--scope`** 选择同步 **`hooks`**、**`scripts`**、**`rules`**、**`skills`**、**`knowledge`**、**`references`**（默认 **`a`** 为全部；**`k`** / **`knowledge`** 仅后两者）。当 **`--target` 不是 `$HOME`** 且 **`${TARGET}/.docsconfig`** 已存在时，所有 scope 都会按本次参数重算并覆盖 **`AGENT_ROOT`** 与 **`AGENT_DIRS`**。`docs-install` 在 `scope=config|knowledge` 下都会处理 `AGENT_*`：仅当 `.docsconfig` 中 **`AGENT_ROOT`** 为空时写默认 **`AGENT_ROOT=$HOME`** 与 **`AGENT_DIRS=.cursor`**；`AGENT_ROOT` 非空时保留原值。
+- **Agent 配置**（**`agent-install.sh`**）：在 **`--target`**（默认 **`$HOME`**）下按 **`--agents`**（默认 **`cursor`**，可 **`all`** 或多选）安装到 **`${TARGET}/.{.cursor,.trae,.claude,.kiro,.codex}/`** 中对应目录；单份实体默认存储于 **`$HOME/.agents/`**；按 **`--scope`** 选择同步 **`hooks`**、**`scripts`**、**`rules`**、**`skills`**、**`knowledge`**、**`references`**（默认 **`a`** 为全部；**`k`** / **`knowledge`** 仅后两者）。当 **`--target` 不是 `$HOME`** 且 **`${TARGET}/.docsconfig`** 已存在时，所有 scope 都会按本次参数重算并覆盖 **`AGENT_ROOT`** 与 **`AGENT_DIRS`**。`docs-install` 在 `scope=config|knowledge` 下都会处理 `AGENT_*`：仅当 `.docsconfig` 中 **`AGENT_ROOT`** 为空时写默认 **`AGENT_ROOT=$HOME`** 与 **`AGENT_DIRS=.cursor`**；`AGENT_ROOT` 非空时保留原值。
 
 - **冲突处理**：**`docs-install`** 若目标路径已存在，默认会交互式提示；使用 `--force` 强制覆盖，或 `--dry-run` 预览。**`agent-install`** 对安装树采用同步覆盖（可用 `--dry-run` 预览）。
 
@@ -172,7 +172,7 @@ export GIT_REF=main
 | ------ | ------ | ------ |
 | `--scope=SCOPE` | `a`：全部（含 `knowledge/`、`references/`）；`r`：rules；`s`：skills；`h`：hooks；`sh`：scripts（含复制 `agent/scripts/docs-core.sh`）；`k` / `knowledge`：仅 `knowledge/` + `references/` | `a` |
 | `--target PATH` | 安装父目录，其下仅为**已选 agent** 创建 **`${TARGET}/.cursor`** 等；**非 `$HOME`** 且存在 `PATH/.docsconfig` 时，任意 scope 都会按本次参数重算并覆盖 `AGENT_ROOT`/`AGENT_DIRS` | `$HOME` |
-| `--agents=LIST` | `cursor` \| `trae` \| `claude` \| `kiro` \| `all`；逗号或空格分隔多选 | `cursor` |
+| `--agents=LIST` | `cursor` \| `trae` \| `claude` \| `kiro` \| `codex` \| `all`；逗号或空格分隔多选 | `cursor` |
 | `--dry-run` | 预览，不写入 | - |
 | `-h`, `--help` | 显示帮助 | - |
 
@@ -226,7 +226,7 @@ your-project/
 ├── .agents/                       # agent-install 单份实体存储（默认）
 │   ├── knowledge/                 # agent/knowledge 治理 SSOT（scope=a 或 k）
 │   └── references/                # agent/references（scope=a 或 k）
-├── .cursor/                       # Cursor（另有 .trae/、.claude/、.kiro/ 下同构）
+├── .cursor/                       # Cursor（另有 .trae/、.claude/、.kiro/、.codex/ 下同构）
 │   ├── hooks.json                 # 自仓库 agent/hooks.json
 │   ├── hooks/                     # 自仓库 agent/hooks/
 │   ├── scripts/                   # 含 docs-core.sh（自仓库 agent/scripts/ 复制）与 config-bootstrap 等
@@ -234,7 +234,8 @@ your-project/
 │   └── rules/                     # Rules
 ├── .trae/
 ├── .claude/
-└── .kiro/
+├── .kiro/
+└── .codex/
 ```
 
 **注意**：standalone + `type=application`（默认）下自动排除 `DESIGN.md` 和 `CONTRIBUTING.md`。
@@ -257,7 +258,7 @@ your-project/
 
 ### Agent 安装（agent-install.sh）
 
-1. **`--scope` 含 `sh` 时**：将 **`agent/scripts/`** 下条目（**不含** `docs-core.sh`）与 **`agent/scripts/docs-core.sh`（共享实现）** 安装到 **`${TARGET}/.cursor`、`.trae`、`.claude`、`.kiro/scripts/`**；并对 `scripts/` 下树执行 `agent/` → **`AGENT_DIR/`** 的路径改写。
+1. **`--scope` 含 `sh` 时**：将 **`agent/scripts/`** 下条目（**不含** `docs-core.sh`）与 **`agent/scripts/docs-core.sh`（共享实现）** 安装到 **`${TARGET}/.cursor`、`.trae`、`.claude`、`.kiro`、`.codex/scripts/`**；并对 `scripts/` 下树执行 `agent/` → **`AGENT_DIR/`** 的路径改写。
 2. **`--scope` 含 `s` 时**：将 **`agent/skills/`** 下各技能子目录同步到三处 **`skills/`**（排除各层 **README**；不再依赖前缀筛选）。
 3. **`--scope` 含 `r` 时**：同步 **`agent/rules/`** 到三处 **`rules/`**。
 4. **`--scope` 含 `h` 时**：同步 **`agent/hooks/`**（含同目录下的 **`hooks.json`** SSOT）。

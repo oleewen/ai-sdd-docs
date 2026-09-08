@@ -30,7 +30,8 @@ _ps_source_docs_core() {
     "${HOME}/.cursor/scripts/docs-core.sh" \
     "${HOME}/.trae/scripts/docs-core.sh" \
     "${HOME}/.claude/scripts/docs-core.sh" \
-    "${HOME}/.kiro/scripts/docs-core.sh"; do
+    "${HOME}/.kiro/scripts/docs-core.sh" \
+    "${HOME}/.codex/scripts/docs-core.sh"; do
     if [[ -f "$dc" ]]; then
       # shellcheck source=/dev/null
       source "$dc"

@@ -11,7 +11,9 @@ else
     "${HOME}/.agents/scripts/docs-core.sh" \
     "${HOME}/.cursor/scripts/docs-core.sh" \
     "${HOME}/.trae/scripts/docs-core.sh" \
-    "${HOME}/.claude/scripts/docs-core.sh"; do
+    "${HOME}/.claude/scripts/docs-core.sh" \
+    "${HOME}/.kiro/scripts/docs-core.sh" \
+    "${HOME}/.codex/scripts/docs-core.sh"; do
     if [[ -f "$_bootstrap" ]]; then
       # shellcheck source=/dev/null
       source "$_bootstrap"

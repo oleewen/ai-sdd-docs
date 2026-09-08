@@ -84,7 +84,7 @@ SDX_BS_AGENT_TARGET=''
 if declare -p SDX_SUPPORTED_AGENTS >/dev/null 2>&1; then
   SDX_BS_AGENT_CHOICES=("${SDX_SUPPORTED_AGENTS[@]}" all)
 else
-  readonly -a SDX_BS_AGENT_CHOICES=(cursor trae claude kiro all)
+  readonly -a SDX_BS_AGENT_CHOICES=(cursor trae claude kiro codex all)
 fi
 
 if ! declare -F sdx_log >/dev/null 2>&1; then
@@ -327,7 +327,7 @@ sdx_bs_prompt_agents() {
       if (( idx >= 0 && idx < ${#agent_list[@]} )); then
         result_parts+=("${agent_list[$idx]}")
       else
-        sdx_error "无效编号: $part（合法范围 1-${#agent_list[@]}）"
+        sdx_error "无效编号: ${part}（合法范围 1-${#agent_list[@]}）"
       fi
     else
       result_parts+=("$part")

@@ -13,7 +13,7 @@ validate_bootstrap_docsconfig "$SCRIPT_DIR"
 
 AGENT_DIR="$REPO_ROOT/agent"
 [[ -d "$AGENT_DIR" ]] || {
-  echo "[ERROR] 未找到 $AGENT_DIR（REPO_ROOT=$REPO_ROOT）"
+  echo "[ERROR] 未找到 ${AGENT_DIR}（REPO_ROOT=$REPO_ROOT）"
   exit 1
 }
 
